@@ -5,6 +5,7 @@ package pl.mateusz.niedbal.nbpexchangeapp.api.model;
  */
 public class RateModel {
 
+    private String no;
     private String effectiveDate;
     private String mid;
 
@@ -14,6 +15,10 @@ public class RateModel {
     public RateModel(String effectiveDate, String mid) {
         this.effectiveDate = effectiveDate;
         this.mid = mid;
+    }
+
+    public String getNo() {
+        return no;
     }
 
     public String getEffectiveDate() {
@@ -27,7 +32,8 @@ public class RateModel {
     @Override
     public String toString() {
         return "RateModel{" +
-                "effectiveDate='" + effectiveDate + '\'' +
+                "no='" + no + '\'' +
+                ", effectiveDate='" + effectiveDate + '\'' +
                 ", mid='" + mid + '\'' +
                 '}';
     }

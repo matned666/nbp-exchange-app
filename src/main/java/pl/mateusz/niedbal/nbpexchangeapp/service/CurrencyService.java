@@ -1,5 +1,6 @@
 package pl.mateusz.niedbal.nbpexchangeapp.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.mateusz.niedbal.nbpexchangeapp.api.ApiRequestService;
 import pl.mateusz.niedbal.nbpexchangeapp.api.model.CurrencyModel;
@@ -15,6 +16,9 @@ import java.util.Optional;
 
 @Service
 public class CurrencyService {
+
+    @Value("${api.currency.rate.url}")
+    private String apiUrl;
 
     private final CurrencyRepository currencyRepository;
     private final ApiRequestService apiRequestService;
@@ -49,7 +53,7 @@ public class CurrencyService {
 
     private CurrencyDTO getCurrencyDTOFromApi(String code, String date) {
         date = date.isEmpty()?"today": date;
-        CurrencyModel currencyModel = apiRequestService.get("http://api.nbp.pl/api/exchangerates/rates/a/"+ code +"/"+ date +"/");
+        CurrencyModel currencyModel = apiRequestService.get(apiUrl + code +"/"+ date +"/");
         CurrencyDTO currencyDTO = currencyModel == null ?
                 null :
                 CurrencyDTO.applyApiModel(currencyModel);

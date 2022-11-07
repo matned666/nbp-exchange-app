@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import pl.mateusz.niedbal.nbpexchangeapp.api.model.CurrencyModel;
+import pl.mateusz.niedbal.nbpexchangeapp.exception.CurrencyNotFoundException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class ApiRequestService {
         try {
             return mapper.readValue(response, CurrencyModel.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new CurrencyNotFoundException();
         }
     }
 
@@ -43,7 +44,7 @@ public class ApiRequestService {
             }
             return buffer.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CurrencyNotFoundException();
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -56,7 +57,6 @@ public class ApiRequestService {
                 e.printStackTrace();
             }
         }
-        return null;
     }
 
 }

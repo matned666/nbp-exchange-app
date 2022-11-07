@@ -20,11 +20,11 @@ public class AppController {
 
     @GetMapping("/convert/{amount}")
     public String convertAmount(@PathVariable BigDecimal amount,
-                                     @RequestParam(defaultValue = "") String date,
-                                     @RequestParam(defaultValue = "PLN") String currencyA,
-                                     @RequestParam(defaultValue = "EUR") String currencyB) {
+                                @RequestParam(defaultValue = "") String date,
+                                @RequestParam(defaultValue = "PLN") String currencyA,
+                                @RequestParam(defaultValue = "EUR") String currencyB) {
         BigDecimal exchange = currencyService.exchange(amount, currencyA, currencyB, date);
-        return "Exchange: " + amount + " " + currencyA.toUpperCase() + " = " + exchange + " " + currencyB.toUpperCase();
+        return "Exchange on " + date + ": " + amount + " " + currencyA.toUpperCase() + " = " + exchange + " " + currencyB.toUpperCase();
     }
 
 }

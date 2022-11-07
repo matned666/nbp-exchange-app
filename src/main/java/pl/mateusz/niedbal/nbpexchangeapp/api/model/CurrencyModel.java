@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class CurrencyModel {
 
+    private String table;
     private String currency;
     private String code;
     private List<RateModel> rates = new ArrayList<>();
@@ -21,6 +22,10 @@ public class CurrencyModel {
         this.rates = rates;
     }
 
+    public String getTable() {
+        return table;
+    }
+
     public String getCurrency() {
         return currency;
     }
@@ -31,14 +36,5 @@ public class CurrencyModel {
 
     public List<RateModel> getRates() {
         return rates;
-    }
-
-    @Override
-    public String toString() {
-        return "CurrencyModel{" +
-                "currency='" + currency + '\'' +
-                ", code='" + code + '\'' +
-                ", rates=" + rates +
-                '}';
     }
 }
