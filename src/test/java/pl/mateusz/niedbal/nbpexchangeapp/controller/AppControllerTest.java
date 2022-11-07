@@ -62,8 +62,8 @@ class AppControllerTest {
             "100, 20.00, USD, 1, EUR, 5, 2022-02-02"
     })
     void ShouldReturnExpectedResultString_WhenConvertGetRequest(String value, String expectedResultStr, String rateCodeA, String rateA, String rateCodeB, String rateB, String rateDate) throws Exception {
-        CurrencyModel currencyModelA = new CurrencyModel("test", rateCodeA, Collections.singletonList(new RateModel(rateDate, rateA)));
-        CurrencyModel currencyModelB = new CurrencyModel("test", rateCodeB, Collections.singletonList(new RateModel(rateDate, rateB)));
+        CurrencyModel currencyModelA = new CurrencyModel("test", rateCodeA, Collections.singletonList(new RateModel("test", rateDate, rateA)));
+        CurrencyModel currencyModelB = new CurrencyModel("test", rateCodeB, Collections.singletonList(new RateModel("test", rateDate, rateB)));
         Currency currencyA = CurrencyDTO.applyApiModel(currencyModelA).convertToEntity();
         Currency currencyB = CurrencyDTO.applyApiModel(currencyModelB).convertToEntity();
 
@@ -86,7 +86,7 @@ class AppControllerTest {
         String value = "1";
         String notExistingCode = "notExistingCode";
         doReturn(Optional.empty()).when(currencyRepository).findByCode(any(), any());
-        doThrow(new CurrencyNotFoundException()).when(apiRequestService).receiveCurrencyModel(any(), any());
+        doThrow(CurrencyNotFoundException.class).when(apiRequestService).receiveCurrencyModel(any(), any());
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/convert/"+value+"?currencyA="+notExistingCode)
                                 .accept("application/json"))

@@ -7,10 +7,10 @@ import pl.mateusz.niedbal.nbpexchangeapp.dto.CurrencyDTO;
 import pl.mateusz.niedbal.nbpexchangeapp.entity.Currency;
 import pl.mateusz.niedbal.nbpexchangeapp.exception.CurrencyNotFoundException;
 import pl.mateusz.niedbal.nbpexchangeapp.repository.CurrencyRepository;
+import pl.mateusz.niedbal.nbpexchangeapp.utils.Calculator;
 import pl.mateusz.niedbal.nbpexchangeapp.utils.DateUtils;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -39,9 +39,7 @@ private static final Logger logger = Logger.getLogger(CurrencyService.class.getN
     public BigDecimal exchange(BigDecimal amount, String codeA, String codeB, String date) {
         CurrencyDTO currencyA = findCurrency(codeA, date);
         CurrencyDTO currencyB = findCurrency(codeB, date);
-        BigDecimal currencyRateA = currencyA.getMidRate();
-        BigDecimal currencyRateB = currencyB.getMidRate();
-        return amount.multiply(currencyRateA).divide(currencyRateB,  2, RoundingMode.HALF_UP);
+        return Calculator.exchange(amount, currencyA, currencyB);
     }
 
     private CurrencyDTO findCurrency(String code, String date) {
