@@ -72,6 +72,34 @@ class CurrencyServiceTest {
     }
 
 
+    @ParameterizedTest
+    @CsvSource({
+            "100, 20, USD, 1, EUR, 5, 2022-02-02",
+            "100, 20, PLN, 1, EUR, 5, 2022-02-02",
+            "100, 10, PLN, 1, EUR, 10, 2022-02-02",
+            "100, 66.67, USD, 10, EUR, 15, 2022-02-02",
+            "100, 6.67, PLN, 1000000, EUR, 15, 2022-02-02",
+            "100, 6.67, PLN, 34, EUR, 15, 2022-02-02",
+            "100, 20, USD, 1, EUR, 5, 2022-02-02"
+    })
+    void ShouldReturnCurrencyFomRepository_WhenFoundOnRepository(String value, String expectedResultStr, String rateCodeA, String rateA, String rateCodeB, String rateB, String rateDate){
+        CurrencyModel currencyModelA = new CurrencyModel("test", rateCodeA, Collections.singletonList(new RateModel(rateDate, rateA)));
+        CurrencyModel currencyModelB = new CurrencyModel("test", rateCodeB, Collections.singletonList(new RateModel(rateDate, rateB)));
+        Currency currencyA = CurrencyDTO.applyApiModel(currencyModelA).convertToEntity();
+        Currency currencyB = CurrencyDTO.applyApiModel(currencyModelB).convertToEntity();
+
+        doReturn(Optional.of(currencyA)).when(currencyRepository).findByCode(rateCodeA, LocalDate.from(DateUtils.formatter.parse(rateDate)));
+        doReturn(Optional.of(currencyB)).when(currencyRepository).findByCode(rateCodeB, LocalDate.from(DateUtils.formatter.parse(rateDate)));
+        doReturn(currencyA).when(currencyRepository).save(currencyA);
+        doReturn(currencyB).when(currencyRepository).save(currencyB);
+
+        BigDecimal actualResult = currencyService.exchange(new BigDecimal(value), rateCodeA, rateCodeB, rateDate);
+        BigDecimal expectedResult = new BigDecimal(expectedResultStr).divide(new BigDecimal(1), 2, RoundingMode.HALF_UP);
+
+        assertEquals(expectedResult, actualResult);
+    }
+
+
 
 
 
