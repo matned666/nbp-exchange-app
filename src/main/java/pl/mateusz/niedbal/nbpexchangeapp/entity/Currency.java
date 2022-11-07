@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Currency repository model
+ */
 @Entity
 public class Currency {
 
@@ -30,44 +33,20 @@ public class Currency {
         this.midRate = midRate;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getCode() {
         return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
     public BigDecimal getMidRate() {
         return midRate;
-    }
-
-    public void setMidRate(BigDecimal midRate) {
-        this.midRate = midRate;
     }
 
     @Override
@@ -81,5 +60,16 @@ public class Currency {
     @Override
     public int hashCode() {
         return Objects.hash(id, code);
+    }
+
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", midRate=" + midRate +
+                '}';
     }
 }

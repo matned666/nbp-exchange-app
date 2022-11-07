@@ -58,10 +58,10 @@ class CurrencyServiceTest {
         Currency currencyA = CurrencyDTO.applyApiModel(currencyModelA).convertToEntity();
         Currency currencyB = CurrencyDTO.applyApiModel(currencyModelB).convertToEntity();
 
-        doReturn(currencyModelA).when(apiRequestService).get(apiUrl + rateCodeA +"/"+ rateDate +"/");
-        doReturn(currencyModelB).when(apiRequestService).get(apiUrl + rateCodeB +"/"+ rateDate +"/");
         doReturn(Optional.empty()).when(currencyRepository).findByCode(rateCodeA, LocalDate.from(DateUtils.formatter.parse(rateDate)));
         doReturn(Optional.empty()).when(currencyRepository).findByCode(rateCodeB, LocalDate.from(DateUtils.formatter.parse(rateDate)));
+        doReturn(currencyModelA).when(apiRequestService).receiveCurrencyModel(rateCodeA, rateDate);
+        doReturn(currencyModelB).when(apiRequestService).receiveCurrencyModel(rateCodeB, rateDate);
         doReturn(currencyA).when(currencyRepository).save(currencyA);
         doReturn(currencyB).when(currencyRepository).save(currencyB);
 
@@ -98,14 +98,5 @@ class CurrencyServiceTest {
 
         assertEquals(expectedResult, actualResult);
     }
-
-
-
-
-
-
-
-
-
 
 }

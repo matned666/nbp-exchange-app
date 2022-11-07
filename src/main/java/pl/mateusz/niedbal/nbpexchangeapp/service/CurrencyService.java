@@ -1,6 +1,5 @@
 package pl.mateusz.niedbal.nbpexchangeapp.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.mateusz.niedbal.nbpexchangeapp.api.ApiRequestService;
 import pl.mateusz.niedbal.nbpexchangeapp.api.model.CurrencyModel;
@@ -14,12 +13,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class CurrencyService {
-
-    @Value("${api.currency.rate.url}")
-    private String apiUrl;
+private static final Logger logger = Logger.getLogger(CurrencyService.class.getName());
 
     private final CurrencyRepository currencyRepository;
     private final ApiRequestService apiRequestService;
@@ -30,16 +28,25 @@ public class CurrencyService {
         this.apiRequestService = apiRequestService;
     }
 
+    /**
+     * Calculates value exchange from currencyA to currencyB
+     * @param amount to exchange
+     * @param codeA 3 letters to exchange currency code existing in NBP table A
+     * @param codeB 3 letters exchange on currency code existing in NBP table A
+     * @param date currency rate date
+     * @return BigDecimal currency exchange - amount * currencyRateA / currencyRateB - rounded to 2 digits after a coma
+     */
     public BigDecimal exchange(BigDecimal amount, String codeA, String codeB, String date) {
-        CurrencyDTO currencyA = findCurrencyByCodeAndDate(codeA, date);
-        CurrencyDTO currencyB = findCurrencyByCodeAndDate(codeB, date);
-        BigDecimal currencyABigDecimal = currencyA.getMidRate();
-        BigDecimal currencyBBigDecimal = currencyB.getMidRate();
-        return amount.multiply(currencyABigDecimal).divide(currencyBBigDecimal,  2, RoundingMode.HALF_UP);
+        CurrencyDTO currencyA = findCurrency(codeA, date);
+        CurrencyDTO currencyB = findCurrency(codeB, date);
+        BigDecimal currencyRateA = currencyA.getMidRate();
+        BigDecimal currencyRateB = currencyB.getMidRate();
+        return amount.multiply(currencyRateA).divide(currencyRateB,  2, RoundingMode.HALF_UP);
     }
 
-    private CurrencyDTO findCurrencyByCodeAndDate(String code, String date) {
+    private CurrencyDTO findCurrency(String code, String date) {
         if (code.equalsIgnoreCase("pln")) {
+            logger.info("PLN generated currency taken");
             return CurrencyDTO.PLN;
         }
         LocalDate searchedDate = LocalDate.from(date.isEmpty()?
@@ -49,16 +56,17 @@ public class CurrencyService {
         if (currency.isEmpty()) {
             return getCurrencyDTOFromApi(code, date);
         }
+        logger.info("Currency " + code + " from " + date + " was taken from local repository.");
         return CurrencyDTO.applyEntity(currency.get());
     }
 
     private CurrencyDTO getCurrencyDTOFromApi(String code, String date) {
         date = date.isEmpty()?"today": date;
-        CurrencyModel currencyModel = apiRequestService.get(apiUrl + code +"/"+ date +"/");
+        CurrencyModel currencyModel = apiRequestService.receiveCurrencyModel(code, date);
         CurrencyDTO currencyDTO = currencyModel == null ?
                 null :
                 CurrencyDTO.applyApiModel(currencyModel);
-        if (currencyModel == null) throw new CurrencyNotFoundException();
+        if (currencyModel == null) throw new CurrencyNotFoundException(code, date);
         return CurrencyDTO.applyEntity(currencyRepository.save(currencyDTO.convertToEntity()));
     }
 

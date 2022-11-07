@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Currency API model: <a href="http://api.nbp.pl/en.html">http://api.nbp.pl/en.html</a> <br>
  * Example: {"table":"A","currency":"euro","code":"EUR","rates":[{ ... }]}
  */
 public class CurrencyModel {

@@ -3,6 +3,7 @@ package pl.mateusz.niedbal.nbpexchangeapp.dto;
 import pl.mateusz.niedbal.nbpexchangeapp.api.model.CurrencyModel;
 import pl.mateusz.niedbal.nbpexchangeapp.api.model.RateModel;
 import pl.mateusz.niedbal.nbpexchangeapp.entity.Currency;
+import pl.mateusz.niedbal.nbpexchangeapp.exception.CurrencyNotFoundException;
 import pl.mateusz.niedbal.nbpexchangeapp.utils.DateUtils;
 
 import java.math.BigDecimal;
@@ -11,6 +12,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Data Transfer Object
+ */
 public class CurrencyDTO {
 
     public final static CurrencyDTO PLN = new CurrencyDTO("pln", "złoty", LocalDate.now(), new BigDecimal(1));
@@ -25,17 +29,23 @@ public class CurrencyDTO {
         return new CurrencyDTO(entity.getCode(), entity.getName(), entity.getDate(), entity.getMidRate());
     }
 
+    /**
+     * Creates DTO from API model <br>
+     * from {@link CurrencyModel} and its latest {@link RateModel}
+     * @param currencyModel API model
+     * @return CurrencyDTO
+     */
     public static CurrencyDTO applyApiModel(CurrencyModel currencyModel) {
-        LocalDate date = null;
+        LocalDate date;
         List<RateModel> rates = currencyModel.getRates();
-        RateModel rate = null;
+        RateModel rate;
         if (rates.isEmpty()) {
-            throw new RuntimeException("No such rate");
+            throw new CurrencyNotFoundException(currencyModel.getCode(), "no date");
         }
         rates.sort(Comparator.comparing(o -> LocalDate.from(DateUtils.formatter.parse(o.getEffectiveDate()))));
         rate =  rates.get(rates.size()-1);
         if (rate.getEffectiveDate() == null || rate.getMid() == null) {
-            throw new RuntimeException("No such rate");
+            throw new CurrencyNotFoundException(currencyModel.getCode(), "no date ad no mid rate");
         }
         String effectiveDate = rate.getEffectiveDate();
         date = effectiveDate == null ? null : LocalDate.from(DateUtils.formatter.parse(effectiveDate));
@@ -57,22 +67,6 @@ public class CurrencyDTO {
         return new Currency(code, name, date, midRate);
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public LocalDate getDate() {
         return date;
     }
@@ -83,10 +77,6 @@ public class CurrencyDTO {
 
     public BigDecimal getMidRate() {
         return midRate;
-    }
-
-    public void setMidRate(BigDecimal midRate) {
-        this.midRate = midRate;
     }
 
     @Override

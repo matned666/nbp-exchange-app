@@ -10,6 +10,12 @@ import java.util.Optional;
 
 public interface CurrencyRepository extends JpaRepository<Currency, Long> {
 
+    /**
+     * Finds {@link Currency} in repository by its code and date with jpa query
+     * @param code LocalDate
+     * @param date 3 letters String code
+     * @return Optional of {@link Currency}
+     */
     @Query("select c from Currency c where lower(c.code) = lower(:code) and c.date = :date")
     Optional<Currency> findByCode(@Param("code") String code, @Param("date") LocalDate date);
 }
