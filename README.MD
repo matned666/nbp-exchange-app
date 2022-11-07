@@ -22,14 +22,13 @@ By default, it uses H2 DB <br>
 if chosen rte is absent in DB, it is loaded from API and saved to DB
 
 ### Examples:
-<code>
-localhost:8080/convert/1000?currencyA=USD&currencyB=EUR&date=2022-11-07<br>
-localhost:8080/convert/100?currencyB=EUR&date=2022-11-07<br>
-localhost:8080/convert/2000?currencyB=EUR<br>
-localhost:8080/convert/1000<br>
-localhost:8080/convert/99000?date=2022-11-07<br>
-localhost:8080/convert/1200?date=2022-11-07&currencyA=CZK<br>
-</code>
+
+<code>localhost:8080/convert/1000?currencyA=USD&currencyB=EUR&date=2022-11-07</code><br>
+<code>localhost:8080/convert/100?currencyB=EUR&date=2022-11-07</code><br>
+<code>localhost:8080/convert/2000?currencyB=EUR</code><br>
+<code>localhost:8080/convert/1000</code><br>
+<code>localhost:8080/convert/99000?date=2022-11-07</code><br>
+<code>localhost:8080/convert/1200?date=2022-11-07&currencyA=CZK</code><br>
 <br>
 <code>
 localhost:8080/convert/1?currencyA=czk&currencyB=nok&date=2022-11-04
