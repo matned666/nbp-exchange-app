@@ -17,5 +17,6 @@ public class CurrencyNotFoundException extends RuntimeException{
     public CurrencyNotFoundException(String code, String date) {
         super(MESSAGE);
         logger.warning(MESSAGE + code + " >> " + date );
+        logger.warning("Exception happens - code 404");
     }
 }

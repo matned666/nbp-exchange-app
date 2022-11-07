@@ -17,6 +17,10 @@ import java.util.Objects;
  */
 public class CurrencyDTO {
 
+    /**
+     * PLN currency rate is absent in NBP Api table, so it must be generated <br>
+     * Anyway it is a reference currency with mid-rate 1
+     */
     public final static CurrencyDTO PLN = new CurrencyDTO("pln", "złoty", LocalDate.now(), new BigDecimal(1));
 
     private String code;

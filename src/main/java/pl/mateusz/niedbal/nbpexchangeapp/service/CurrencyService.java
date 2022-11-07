@@ -46,7 +46,7 @@ private static final Logger logger = Logger.getLogger(CurrencyService.class.getN
 
     private CurrencyDTO findCurrency(String code, String date) {
         if (code.equalsIgnoreCase("pln")) {
-            logger.info("PLN generated currency taken");
+            logger.info("Generated PLN reference currency with rate 1");
             return CurrencyDTO.PLN;
         }
         LocalDate searchedDate = LocalDate.from(date.isEmpty()?
@@ -56,7 +56,7 @@ private static final Logger logger = Logger.getLogger(CurrencyService.class.getN
         if (currency.isEmpty()) {
             return getCurrencyDTOFromApi(code, date);
         }
-        logger.info("Currency " + code + " from " + date + " was taken from local repository.");
+        logger.info("Currency " + code + " from " + (!date.equals("") ? date : "today") + " was taken from local repository.");
         return CurrencyDTO.applyEntity(currency.get());
     }
 

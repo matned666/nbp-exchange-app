@@ -16,5 +16,6 @@ public class CurrencyFormatException extends RuntimeException{
     public CurrencyFormatException(String code, String date) {
         super(MESSAGE);
         logger.warning(MESSAGE + code + " >> " + date );
+        logger.warning("Exception happens - code 422");
     }
 }
