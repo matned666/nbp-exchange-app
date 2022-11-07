@@ -6,6 +6,7 @@ import pl.mateusz.niedbal.nbpexchangeapp.api.ApiRequestService;
 import pl.mateusz.niedbal.nbpexchangeapp.api.model.CurrencyModel;
 import pl.mateusz.niedbal.nbpexchangeapp.dto.CurrencyDTO;
 import pl.mateusz.niedbal.nbpexchangeapp.entity.Currency;
+import pl.mateusz.niedbal.nbpexchangeapp.exception.CurrencyNotFoundException;
 import pl.mateusz.niedbal.nbpexchangeapp.repository.CurrencyRepository;
 import pl.mateusz.niedbal.nbpexchangeapp.utils.DateUtils;
 
@@ -57,7 +58,7 @@ public class CurrencyService {
         CurrencyDTO currencyDTO = currencyModel == null ?
                 null :
                 CurrencyDTO.applyApiModel(currencyModel);
-        if (currencyModel == null) throw new RuntimeException("No currencyFound");
+        if (currencyModel == null) throw new CurrencyNotFoundException();
         return CurrencyDTO.applyEntity(currencyRepository.save(currencyDTO.convertToEntity()));
     }
 
