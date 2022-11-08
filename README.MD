@@ -1,4 +1,4 @@
-# Simple currency exchange CRUD app
+# Simple currency exchange app
 
 Shows an exchange value of the given amount from given currency A to given currency B<br>
 the exchange is done by the mid-rate from the given date<br>
