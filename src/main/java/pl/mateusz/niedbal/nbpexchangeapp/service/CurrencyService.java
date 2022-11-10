@@ -30,13 +30,14 @@ private static final Logger logger = Logger.getLogger(CurrencyService.class.getN
 
     /**
      * Calculates value exchange from currencyA to currencyB
-     * @param amount to exchange
+     * @param amountString to exchange in String format
      * @param codeA 3 letters to exchange currency code existing in NBP table A
      * @param codeB 3 letters exchange on currency code existing in NBP table A
      * @param date currency rate date
      * @return BigDecimal currency exchange - amount * currencyRateA / currencyRateB - rounded to 2 digits after a coma
      */
-    public BigDecimal exchange(BigDecimal amount, String codeA, String codeB, String date) {
+    public BigDecimal exchange(String amountString, String codeA, String codeB, String date) {
+        BigDecimal amount = new BigDecimal(amountString);
         CurrencyDTO currencyA = findCurrency(codeA, date);
         CurrencyDTO currencyB = findCurrency(codeB, date);
         return Calculator.exchange(amount, currencyA, currencyB);

@@ -18,7 +18,7 @@ public class AppController {
     }
 
     @GetMapping("/convert/{amount}")
-    public String convertAmount(@PathVariable BigDecimal amount,
+    public String convertAmount(@PathVariable String amount,
                                 @RequestParam(defaultValue = "") String date,
                                 @RequestParam(defaultValue = "PLN") String currencyA,
                                 @RequestParam(defaultValue = "EUR") String currencyB) {
